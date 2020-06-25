@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>eu.michael-simons</groupId>
+	<artifactId>native-netty-timeserver-and-client</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>native-netty-timeserver-and-client</name>
+
+	<properties>
+		<java.version>1.8</java.version>
+
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>${java.version}</maven.compiler.source>
+		<maven.compiler.target>${java.version}</maven.compiler.target>
+	</properties>
+
+	<dependencies>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+			<version>4.1.45.Final</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.graalvm.nativeimage</groupId>
+			<artifactId>svm</artifactId>
+			<version>20.1.0</version>
+			<!-- Provided scope as it is only needed for compiling the SVM substitution classes -->
+			<scope>provided</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.graalvm.nativeimage</groupId>
+				<artifactId>native-image-maven-plugin</artifactId>
+				<version>20.1.0</version>
+				<executions>
+					<execution>
+						<id>client</id>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<imageName>client</imageName>
+							<mainClass>ac.simons.netty.example.Client</mainClass>
+							<buildArgs>--no-fallback -H:+ReportExceptionStackTraces</buildArgs>
+						</configuration>
+					</execution>
+					<execution>
+						<id>server</id>
+						<goals>
+							<goal>native-image</goal>
+						</goals>
+						<phase>package</phase>
+						<configuration>
+							<imageName>server</imageName>
+							<mainClass>ac.simons.netty.example.Server</mainClass>
+							<buildArgs>--no-fallback -H:+ReportExceptionStackTraces</buildArgs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>
