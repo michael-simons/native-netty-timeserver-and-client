@@ -3,9 +3,6 @@ package ac.simons.netty.example.svm;
 import io.netty.util.internal.logging.InternalLoggerFactory;
 import io.netty.util.internal.logging.JdkLoggerFactory;
 
-import java.util.Queue;
-import java.util.concurrent.LinkedBlockingDeque;
-
 import com.oracle.svm.core.annotate.Substitute;
 import com.oracle.svm.core.annotate.TargetClass;
 
@@ -20,17 +17,6 @@ final class Target_io_netty_util_internal_logging_InternalLoggerFactory {
 		return JdkLoggerFactory.INSTANCE;
 	}
 }
-
-
-@TargetClass(className = "io.netty.channel.nio.NioEventLoop")
-final class Target_io_netty_channel_nio_NioEventLoop {
-
-    @Substitute
-    private static Queue<Runnable> newTaskQueue0(int maxPendingTasks) {
-        return new LinkedBlockingDeque<>();
-    }
-}
-
 
 class NettySubstitutions {
 
